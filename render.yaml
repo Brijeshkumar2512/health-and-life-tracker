@@ -1,0 +1,18 @@
+services:
+  # Backend API Service
+  - type: web
+    name: health-tracker-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false # User can provide MongoDB Atlas URI now or later
