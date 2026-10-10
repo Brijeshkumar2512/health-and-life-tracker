@@ -4,6 +4,7 @@ import { HeartPulse, Lock, Mail, User, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/LanguageSelector';
+import InstallPrompt from '../components/InstallPrompt';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -42,8 +43,9 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
-      {/* Top Language Selector */}
-      <div className="absolute top-6 right-6 sm:right-10">
+      {/* Top Language Selector & Install Button */}
+      <div className="absolute top-6 right-6 sm:right-10 flex items-center gap-2.5">
+        <InstallPrompt variant="button" />
         <LanguageSelector variant="navbar" />
       </div>
 
