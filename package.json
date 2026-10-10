@@ -1,0 +1,22 @@
+{
+  "name": "health-and-life-tracker",
+  "version": "1.0.0",
+  "description": "Health & Life Tracker - Full-stack MERN Wellness & Habit Tracking Application",
+  "scripts": {
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && node ./node_modules/vite/bin/vite.js",
+    "build:frontend": "cd frontend && node ./node_modules/vite/bin/vite.js build",
+    "start": "cd backend && node server.js"
+  },
+  "keywords": [
+    "mern",
+    "health-tracker",
+    "habit-tracker",
+    "fitness",
+    "nutrition",
+    "recharts",
+    "tailwind"
+  ],
+  "author": "",
+  "license": "ISC"
+}
