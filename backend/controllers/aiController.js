@@ -231,43 +231,141 @@ const askAICoach = async (req, res) => {
     const q = question.toLowerCase();
     let reply = '';
 
-    // Smart contextual NLP response generator
-    if (q.includes('pani') || q.includes('water') || q.includes('hydration')) {
+    // Comprehensive multilingual keywords (English, Romanized Hindi, and Devanagari Hindi)
+    const isWaterQuery =
+      q.includes('pani') ||
+      q.includes('water') ||
+      q.includes('hydration') ||
+      q.includes('पानी') ||
+      q.includes('जल') ||
+      q.includes('प्यास');
+
+    const isFoodQuery =
+      q.includes('khana') ||
+      q.includes('food') ||
+      q.includes('diet') ||
+      q.includes('dinner') ||
+      q.includes('lunch') ||
+      q.includes('breakfast') ||
+      q.includes('meal') ||
+      q.includes('protein') ||
+      q.includes('calorie') ||
+      q.includes('डिनर') ||
+      q.includes('खाना') ||
+      q.includes('खाऊं') ||
+      q.includes('खाऊ') ||
+      q.includes('नाश्ता') ||
+      q.includes('भोजन') ||
+      q.includes('डाइट') ||
+      q.includes('कैलोरी') ||
+      q.includes('प्रोटीन');
+
+    const isSleepQuery =
+      q.includes('neend') ||
+      q.includes('sleep') ||
+      q.includes('soye') ||
+      q.includes('sona') ||
+      q.includes('tired') ||
+      q.includes('fatigue') ||
+      q.includes('नींद') ||
+      q.includes('सोने') ||
+      q.includes('थकान') ||
+      q.includes('आराम');
+
+    const isWorkoutQuery =
+      q.includes('workout') ||
+      q.includes('kasrat') ||
+      q.includes('exercise') ||
+      q.includes('gym') ||
+      q.includes('run') ||
+      q.includes('walk') ||
+      q.includes('कसरत') ||
+      q.includes('व्यायाम') ||
+      q.includes('वर्कआउट') ||
+      q.includes('दौड़');
+
+    const isWeightQuery =
+      q.includes('vajan') ||
+      q.includes('weight') ||
+      q.includes('fat') ||
+      q.includes('lose') ||
+      q.includes('gain') ||
+      q.includes('वजन') ||
+      q.includes('मोटापा') ||
+      q.includes('कम');
+
+    const isHabitQuery =
+      q.includes('habit') ||
+      q.includes('streak') ||
+      q.includes('routine') ||
+      q.includes('आदत') ||
+      q.includes('लकीर') ||
+      q.includes('दिनचर्या');
+
+    if (isWaterQuery) {
       const water = log?.water?.totalMl || 0;
       const goal = user.goals?.dailyWaterMl || 2500;
+      const remaining = Math.max(0, goal - water);
+
       if (lang === 'hi') {
-        reply = `आज आपने ${water} ml पानी पिया है (लक्ष्य: ${goal} ml)। पर्याप्त पानी पीने से त्वचा चमकदार रहती है, पाचन सुधरता है और थकान दूर होती है। हर 1-2 घंटे में 1 गिलास पानी पीने का नियम बनाएं! 💧`;
+        if (remaining > 0) {
+          reply = `💧 आज आपने ${water} ml पानी पिया है। अपने दैनिक लक्ष्य (${goal} ml) को पूरा करने के लिए अभी ${remaining} ml (लगभग ${Math.ceil(remaining / 250)} गिलास) पानी और पीना बाकी है! हर 1 घंटे में 1 गिलास पानी पीने का अलार्म लगा लें और पास में पानी की बोतल रखें।`;
+        } else {
+          reply = `🎉 बधाई हो! आपने आज का ${goal} ml पानी का लक्ष्य सफलतापूर्वक पूरा कर लिया है (${water} ml लॉग किया गया)। शरीर को हाइड्रेटेड रखना मेटाबॉलिज्म और त्वचा के लिए सर्वोत्तम है!`;
+        }
       } else {
-        reply = `You have logged ${water} ml of water today out of your ${goal} ml target. Staying hydrated boosts cognitive function, aids digestion, and keeps energy high! 💧`;
+        if (remaining > 0) {
+          reply = `💧 You've logged ${water} ml out of your ${goal} ml goal. You need ${remaining} ml (about ${Math.ceil(remaining / 250)} glasses) to finish today! Keep a bottle on your desk and take sips every 45-60 minutes.`;
+        } else {
+          reply = `🎉 Awesome! You have already hit your daily water goal of ${goal} ml (${water} ml logged). Great discipline!`;
+        }
       }
-    } else if (q.includes('khana') || q.includes('food') || q.includes('diet') || q.includes('dinner') || q.includes('meal') || q.includes('protein')) {
+    } else if (isFoodQuery) {
       const calories = (log?.meals || []).reduce((s, m) => s + (m.calories || 0), 0);
       const goal = user.goals?.dailyCalories || 2000;
       const remaining = Math.max(0, goal - calories);
+      const proteinConsumed = (log?.meals || []).reduce((s, m) => s + (m.protein || 0), 0);
+      const proteinGoal = user.goals?.dailyProteinGrams || 120;
+
       if (lang === 'hi') {
-        reply = `आज आपने ${calories} kcal ली है, आपके पास ${remaining} kcal शेष हैं। उच्च प्रोटीन विकल्पों में पनीर, दाल, अंडे, सोया चंक्स, ग्रीक योगर्ट या चिकन शामिल करें। रात का भोजन हल्का रखें! 🥗`;
+        reply = `🥗 आज आपने कुल ${calories} kcal ली है, और आपके पास ${remaining} kcal बची हुई हैं (प्रोटीन: ${proteinConsumed}g / ${proteinGoal}g लक्ष्य)।\n\nरात के डिनर के लिए बेहतरीन विकल्प:\n1. 2 मल्टीग्रेन रोटी + 100g पनीर भुर्जी + खीरे का सलाद (~380 kcal, 22g प्रोटीन)\n2. मूंग दाल की खिचड़ी + एक कटोरी गाढ़ा दही (~320 kcal, 16g प्रोटीन)\n3. उबली दाल + ग्रिल्ड सब्जियां / टोफू / उबले अंडे\n\nटिप: सोने से कम से कम 2 घंटे पहले खाना खा लें ताकि पाचन अच्छा रहे!`;
       } else {
-        reply = `You have consumed ${calories} kcal today with ${remaining} kcal remaining. For high protein with clean macros, consider eggs, paneer, lentils, tofu, or grilled chicken breast with veggies! 🥗`;
+        reply = `🥗 Today you have consumed ${calories} kcal, leaving ${remaining} kcal for your target (Protein: ${proteinConsumed}g / ${proteinGoal}g goal).\n\nRecommended dinner choices:\n1. 2 Rotis with Paneer Bhurji / Tofu & Green Salad (~380 kcal, 22g Protein)\n2. Yellow Lentil Soup (Moong Dal) with steamed veggies & Greek yogurt (~320 kcal)\n3. Grilled chicken breast or scrambled egg whites with sautéed veggies\n\nTip: Finish dinner at least 2 hours before bed for sound digestion!`;
       }
-    } else if (q.includes('neend') || q.includes('sleep') || q.includes('soye') || q.includes('tired') || q.includes('fatigue')) {
+    } else if (isSleepQuery) {
+      const sleepDuration = log?.sleep?.durationHours || 0;
       if (lang === 'hi') {
-        reply = `गहरी नींद के लिए सोने से 1 घंटे पहले कमरे की लाइट धीमी कर दें और फोन दूर रखें। कैफीन (चाय/कॉफी) शाम 5 बजे के बाद न लें। कम से कम 7-8 घंटे की निर्बाध नींद शरीर की मांसपेशियों की रिकवरी के लिए बहुत जरूरी है। 🌙`;
+        reply = `🌙 अच्छी और गहरी नींद के लिए ये 4 नियम अपनाएं:\n1. सोने से 45 मिनट पहले मोबाइल, लैपटॉप और टीवी बंद कर दें (नीली रोशनी मेलाटोनिन को रोकती है)।\n2. शाम 5 बजे के बाद चाय/कॉफ़ी न पिएं।\n3. कमरे को बिल्कुल शांत, अंधेरा और थोड़ा ठंडा रखें।\n4. सोने से पहले 5 मिनट गहरी सांस (अनुलोम-विलोम या 4-7-8 तकनीक) लें। शरीर की मांसपेशियों की मरम्मत गहरी नींद में ही होती है!`;
       } else {
-        reply = `For restorative sleep, aim for 7-8 hours nightly. Avoid caffeine after 4 PM, limit blue-light exposure 45 minutes before bed, and maintain a consistent sleep-wake schedule. 🌙`;
+        reply = `🌙 4 Proven tips for deep restorative sleep:\n1. Power down screens 45 mins before bedtime (blue light suppresses melatonin).\n2. Avoid caffeine after 4 PM.\n3. Keep the bedroom dark, quiet, and around 18-20°C.\n4. Practice 5 minutes of mindful deep breathing before sleeping!`;
       }
-    } else if (q.includes('workout') || q.includes('kasrat') || q.includes('exercise') || q.includes('vajan') || q.includes('weight')) {
+    } else if (isWorkoutQuery) {
+      const burned = (log?.workouts || []).reduce((s, w) => s + (w.caloriesBurned || 0), 0);
+      if (lang === 'hi') {
+        reply = `💪 आज आपने कसरत में ${burned} kcal जलाई है। यदि आज कसरत नहीं की है, तो 25-30 मिनट का यह रूटीन करें:\n1. 5 मिनट वार्म-अप (जंपिंग जैक्स, स्ट्रेचिंग)\n2. 15 मिनट बॉडीवेट कसरत (3 सेट: 12 पुश-अप्स, 15 स्क्वैट्स, 30 सेकंड प्लैंक)\n3. 10 मिनट कूल-डाउन वॉक।\nयह रूटीन आपके दिल को स्वस्थ रखेगा और कैलोरी बर्न करेगा!`;
+      } else {
+        reply = `💪 You've burned ${burned} kcal through exercise today. If you haven't worked out yet, try this 25-min home session:\n1. 5-min dynamic warm-up\n2. 15-min circuit (3 sets: 12 push-ups, 15 bodyweight squats, 30s plank)\n3. 5-min cool-down walk & stretching!`;
+      }
+    } else if (isWeightQuery) {
       const weight = user.profile?.currentWeight || 70;
       const target = user.profile?.targetWeight || 68;
+      const diff = Math.abs(weight - target).toFixed(1);
       if (lang === 'hi') {
-        reply = `आपका वर्तमान वजन ${weight} kg है और लक्ष्य ${target} kg है। वसा घटाने और ताकत बढ़ाने के लिए सप्ताह में 4-5 दिन 30-45 मिनट स्ट्रेंथ ट्रेनिंग और 20 मिनट ब्रिस्क वॉकिंग करें। निरंतरता ही सफलता की कुंजी है! 💪`;
+        reply = `⚖️ आपका वर्तमान वजन ${weight} kg है और लक्ष्य ${target} kg है (अंतर: ${diff} kg)।\nवजन को स्वस्थ रूप से प्रबंधित करने के लिए:\n- दैनिक 300-400 kcal का हल्का डेफिसिट रखें (क्रैश डाइट कभी न करें)।\n- रोजाना 8,000-10,000 कदम चलें।\n- पर्याप्त पानी पिएं और हर भोजन में प्रोटीन जरूर शामिल करें!`;
       } else {
-        reply = `Your current weight is ${weight} kg targeting ${target} kg. Combine resistance training 4x/week with progressive overload and daily steps (7,000-10,000) for sustainable body recomposition! 💪`;
+        reply = `⚖️ Current weight: ${weight} kg | Target: ${target} kg (Delta: ${diff} kg).\nFor healthy weight management:\n- Maintain a modest 300-400 kcal deficit (avoid extreme starvation).\n- Target 8,000-10,000 steps daily.\n- Keep protein high to preserve muscle mass while burning fat!`;
+      }
+    } else if (isHabitQuery) {
+      if (lang === 'hi') {
+        reply = `🔥 आदतें और लकीरें (Streaks) बनाने का नियम: 'कभी भी लगातार दो दिन मिस न करें (Never miss twice)'। अगर किसी दिन समय कम हो, तो भी 5 मिनट का छोटा वर्जन पूरा करें। छोटी-छोटी दैनिक आदतें ही 6 महीने में बड़ा बदलाव लाती हैं!`;
+      } else {
+        reply = `🔥 Habit streak rule: 'Never miss twice'. Even on busy days, perform a 2-minute micro version of your habit. Daily micro-consistency compounds into massive lifestyle transformations!`;
       }
     } else {
       if (lang === 'hi') {
-        reply = `मैं आपका व्यक्तिगत स्वास्थ्य कोच हूँ! आपके द्वारा साझा किए गए शारीरिक लक्ष्यों (कैलोरी, पानी, आदतें और कसरत) के अनुसार, नियमित दिनचर्या का पालन करना और पर्याप्त नींद लेना सबसे महत्वपूर्ण है। आप मुझसे खान-पान, पानी या कसरत से संबंधित कोई भी प्रश्न पूछ सकते हैं। 🌟`;
+        reply = `🌟 मैं आपका व्यक्तिगत स्वास्थ्य कोच हूँ! मुझे आपके प्रश्न "${question}" पर विचार करके यह सलाह देनी है:\nस्वास्थ्य में निरंतरता सबसे बड़ी ताकत है। आप मुझसे विशिष्ट रूप से पूछ सकते हैं: "आज डिनर में क्या खाऊं?", "पानी कैसे पूरा करूं?", "कसरत का प्लान", या "वजन कैसे घटाएं"।`;
       } else {
-        reply = `I am your personal AI Health Coach! Based on your current profile metrics, maintaining daily consistency with hydration, balanced macronutrients, and mindful recovery will yield the best long-term results. Feel free to ask about meals, workouts, or habits! 🌟`;
+        reply = `🌟 I am your personal AI Health Coach! Regarding "${question}":\nConsistency is the cornerstone of wellness. Feel free to ask specifically about: "What to eat for dinner?", "Hydration tips", "Workout routines", or "Sleep hygiene"!`;
       }
     }
 
