@@ -198,6 +198,20 @@ export const translations = {
     moodTired: 'Tired',
     moodStressed: 'Stressed',
     moodBad: 'Bad',
+
+    // App Installation
+    installApp: 'Install App',
+    installAppDesc: 'Install on your phone or laptop for 1-click access and smooth app experience!',
+    installModalTitle: 'Install Health & Life Tracker',
+    installBtn: 'Install Now',
+    installedSuccess: 'App installed successfully!',
+    iosInstallTitle: 'How to install on iPhone / iPad',
+    iosStep1: 'Tap the Share icon (⎋) at the bottom of Safari',
+    iosStep2: 'Scroll down and tap "Add to Home Screen"',
+    iosStep3: 'Tap "Add" in the top right corner',
+    desktopInstallTitle: 'How to install on Laptop / PC',
+    desktopStep1: 'Click the Install icon in the browser address bar (top right)',
+    desktopStep2: 'Or click the browser menu (⋮) -> "Install Health & Life Tracker"',
   },
 
   hi: {
@@ -399,5 +413,19 @@ export const translations = {
     moodTired: 'थका हुआ 🥱',
     moodStressed: 'तनावग्रस्त 😰',
     moodBad: 'खराब 😞',
+
+    // App Installation
+    installApp: 'ऐप इंस्टॉल करें',
+    installAppDesc: '1-क्लिक एक्सेस और स्मूथ अनुभव के लिए अपने फोन या लैपटॉप पर इंस्टॉल करें!',
+    installModalTitle: 'हेल्थ & लाइफ ट्रैकर ऐप इंस्टॉल करें',
+    installBtn: 'अभी इंस्टॉल करें',
+    installedSuccess: 'ऐप सफलतापूर्वक इंस्टॉल हो गया!',
+    iosInstallTitle: 'iPhone / iPad पर इंस्टॉल कैसे करें',
+    iosStep1: 'Safari ब्राउज़र के नीचे शेयर (Share) आइकन ⎋ पर टैप करें',
+    iosStep2: 'नीचे स्क्रॉल करें और "Add to Home Screen (होम स्क्रीन में जोड़ें)" चुनें',
+    iosStep3: 'ऊपर दाएँ कोने में "Add (जोड़ें)" पर टैप करें',
+    desktopInstallTitle: 'लैपटॉप / कंप्यूटर पर इंस्टॉल कैसे करें',
+    desktopStep1: 'ब्राउज़र एड्रेस बार (ऊपर दाएँ) में "Install" आइकन पर क्लिक करें',
+    desktopStep2: 'या ब्राउज़र मेनू (⋮) -> "Install Health & Life Tracker" पर क्लिक करें',
   },
 };

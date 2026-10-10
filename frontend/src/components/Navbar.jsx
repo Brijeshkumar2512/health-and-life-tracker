@@ -3,6 +3,7 @@ import { Menu, Plus, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from './LanguageSelector';
+import InstallPrompt from './InstallPrompt';
 
 const Navbar = ({ onOpenSidebar }) => {
   const navigate = useNavigate();
@@ -31,7 +32,10 @@ const Navbar = ({ onOpenSidebar }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2.5 sm:gap-3">
+      <div className="flex items-center gap-2 sm:gap-2.5">
+        {/* PWA Install App Button */}
+        <InstallPrompt variant="button" />
+
         {/* Dedicated Language Selector Dropdown */}
         <LanguageSelector variant="navbar" />
 

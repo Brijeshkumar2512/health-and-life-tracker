@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import InstallPrompt from './InstallPrompt';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout, seedDemo } = useAuth();
@@ -108,6 +109,9 @@ const Sidebar = ({ isOpen, onClose }) => {
             {seeding ? t('seeding') : t('seedSampleData')}
           </button>
         </div>
+
+        {/* PWA Install Card */}
+        <InstallPrompt variant="sidebar" />
 
         {/* User Card & Logout */}
         <div className="p-4 border-t border-slate-100 flex items-center justify-between">
