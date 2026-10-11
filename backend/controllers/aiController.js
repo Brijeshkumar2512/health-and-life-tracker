@@ -249,9 +249,10 @@ Guidelines:
 4. Keep the answer structured with emojis and concise bullet points (around 4-7 lines).
 5. For serious medical conditions, remind the user to consult a certified medical doctor.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const model = 'gemini-3.5-flash-lite';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6500);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -265,7 +266,7 @@ Guidelines:
         ],
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 600,
+          maxOutputTokens: 2048,
         },
       }),
       signal: controller.signal,
@@ -274,10 +275,13 @@ Guidelines:
 
     if (resp.ok) {
       const data = await resp.json();
-      const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (answer && answer.trim().length > 10) {
-        return answer.trim();
+      const parts = data?.candidates?.[0]?.content?.parts || [];
+      const answer = parts.filter((p) => p.text).map((p) => p.text).join('\n').trim();
+      if (answer && answer.length > 10) {
+        return answer;
       }
+    } else {
+      console.warn('Gemini API status not ok:', resp.status);
     }
   } catch (err) {
     console.warn('Gemini LLM call note:', err.message);
