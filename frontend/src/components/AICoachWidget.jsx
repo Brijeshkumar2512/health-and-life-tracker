@@ -186,16 +186,19 @@ const AICoachWidget = () => {
             </div>
 
             {/* Quick Suggestions Pills */}
-            <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex gap-2 overflow-x-auto text-2xs">
+            <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex gap-2 overflow-x-auto text-2xs no-scrollbar">
               {[
                 lang === 'hi' ? 'आज डिनर में क्या खाऊं?' : 'What to eat for dinner?',
-                lang === 'hi' ? 'पानी का लक्ष्य कैसे पूरा करूं?' : 'How to reach water goal?',
-                lang === 'hi' ? 'गहरी नींद के लिए टिप्स' : 'Tips for deep sleep',
+                lang === 'hi' ? 'शाकाहारी प्रोटीन स्रोत' : 'Veg protein sources',
+                lang === 'hi' ? 'पानी का लक्ष्य कैसे पूरा करूं?' : 'Reach water goal',
+                lang === 'hi' ? 'फास्टिंग कैसे करें?' : 'Intermittent fasting',
+                lang === 'hi' ? 'सरदर्द और तनाव के उपाय' : 'Headache & stress',
+                lang === 'hi' ? 'गहरी नींद के लिए टिप्स' : 'Deep sleep tips',
               ].map((suggestion, idx) => (
                 <button
                   key={idx}
                   onClick={() => setQuestion(suggestion)}
-                  className="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-emerald-500 hover:text-emerald-700 shrink-0 transition"
+                  className="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-emerald-500 hover:text-emerald-700 shrink-0 transition shadow-2xs"
                 >
                   {suggestion}
                 </button>
@@ -205,15 +208,15 @@ const AICoachWidget = () => {
             {/* Chat Messages Log */}
             <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
               {chatLog.length === 0 ? (
-                <div className="text-center py-10 text-slate-400">
+                <div className="text-center py-8 text-slate-400">
                   <Bot className="w-8 h-8 mx-auto mb-2 text-emerald-500 opacity-60" />
                   <p className="font-semibold text-slate-700">
-                    {lang === 'hi' ? 'नमस्ते! मैं आपका स्वास्थ्य कोच हूँ।' : 'Hello! I am your AI Health Coach.'}
+                    {lang === 'hi' ? 'नमस्ते! मैं आपका ऑल-इन-वन स्वास्थ्य कोच हूँ।' : 'Hello! I am your AI Health Coach.'}
                   </p>
-                  <p className="text-2xs mt-1 max-w-xs mx-auto">
+                  <p className="text-2xs mt-1 max-w-xs mx-auto text-slate-500 leading-relaxed">
                     {lang === 'hi'
-                      ? 'अपने आज के खाने, पानी, कसरत या आदतों के बारे में कोई भी सवाल पूछें।'
-                      : 'Ask me anything about today’s calories, water intake, workouts or habits.'}
+                      ? 'डाइट, प्रोटीन, कसरत, सिरदर्द, पाचन, फास्टिंग या स्वास्थ्य से जुड़ा कोई भी सवाल पूछें!'
+                      : 'Ask about meals, proteins, workouts, headaches, fasting, or any wellness question!'}
                   </p>
                 </div>
               ) : (
